@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reset Password</title>
+</head>
+<body>
+    <h2>Reset Your Password</h2>
+    <form id="resetForm">
+        <input type="hidden" id="token" value="">
+        <label>New Password:</label>
+        <input type="password" id="new_password" required>
+        <label>Confirm Password:</label>
+        <input type="password" id="re_new_password" required>
+        <button type="submit">Reset Password</button>
+    </form>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("token").value = urlParams.get("token");
+
+        document.getElementById("resetForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const token = document.getElementById("token").value;
+            const new_password = document.getElementById("new_password").value;
+            const re_new_password = document.getElementById("re_new_password").value;
+
+            const response = await fetch(`/auth/reset-password/${token}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ new_password, re_new_password })
+            });
+
+            const result = await response.json();
+            alert(result.message);
+        });
+    </script>
+</body>
+</html>
